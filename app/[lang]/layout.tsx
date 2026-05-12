@@ -4,6 +4,11 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { cormorant, inter, sarabun } from "@/lib/fonts";
 import { locales, type Locale } from "@/lib/i18n";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { LenisProvider } from "@/components/layout/LenisProvider";
+import { SkipNav } from "@/components/layout/SkipNav";
+import { AxeProvider } from "@/components/layout/AxeProvider";
 import "../globals.css";
 
 interface LangLayoutProps {
@@ -35,6 +40,10 @@ export async function generateMetadata({
   return {
     title: titles[locale] ?? titles.en,
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://jp-bkk.com"),
+    robots: {
+      index: false,
+      follow: false,
+    },
   };
 }
 
@@ -45,13 +54,26 @@ export default async function LangLayout({ children, params }: LangLayoutProps) 
     notFound();
   }
 
+  const locale = lang as Locale;
+
   return (
     <html
       lang={lang}
       className={`${cormorant.variable} ${inter.variable} ${sarabun.variable} h-full antialiased`}
     >
+      <head>
+        <meta name="robots" content="noindex, nofollow" />
+      </head>
       <body className="min-h-full flex flex-col">
-        {children}
+        <LenisProvider>
+          <SkipNav />
+          <Navbar lang={locale} />
+          <main id="main-content" className="flex-1 pt-16">
+            {children}
+          </main>
+          <Footer lang={locale} />
+        </LenisProvider>
+        <AxeProvider />
         <Analytics />
         <SpeedInsights />
       </body>
