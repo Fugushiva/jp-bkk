@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "siteName": "JP Restaurant Français Bangkok",
+    "siteDescription": "Cuisine française authentique au cœur de Bangkok"
+  },
+  "nav": {
+    "menu": "Menu",
+    "about": "À propos",
+    "reservations": "Réservations",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero": {
+      "tagline": "Cuisine Française à Bangkok",
+      "cta": "Réserver une Table"
+    }
+  },
+  "common": {
+    "learnMore": "En savoir plus",
+    "bookNow": "Réserver",
+    "close": "Fermer"
+  }
+}
