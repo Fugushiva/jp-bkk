@@ -10,6 +10,7 @@ import { LenisProvider } from "@/components/layout/LenisProvider";
 import { SkipNav } from "@/components/layout/SkipNav";
 import { AxeProvider } from "@/components/layout/AxeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieBanner } from "@/components/ui/CookieBanner";
 import { organizationSchema, localBusinessSchema, websiteSchema } from "@/lib/schema";
 import "../globals.css";
 
@@ -93,6 +94,7 @@ export default async function LangLayout({ children, params }: LangLayoutProps) 
         </LenisProvider>
         <AxeProvider />
         <Toaster />
+        <CookieBanner />
         <Analytics />
         <SpeedInsights />
       </body>

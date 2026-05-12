@@ -1,5 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
+
+declare global {
+  interface Window {
+    __openCookieSettings?: () => void;
+  }
+}
 
 interface FooterProps {
   lang: Locale;
@@ -7,19 +15,19 @@ interface FooterProps {
 
 const legalLinks = {
   en: [
-    { label: "Legal Notice", href: "/legal" },
-    { label: "Privacy Policy", href: "/privacy" },
-    { label: "Cookies Policy", href: "/cookies" },
+    { label: "Legal Notice", href: "/en/legal-notice" },
+    { label: "Privacy Policy", href: "/en/privacy-policy" },
+    { label: "Cookies Policy", href: "/en/cookies-policy" },
   ],
   fr: [
-    { label: "Mentions Légales", href: "/fr/legal" },
-    { label: "Politique de Confidentialité", href: "/fr/privacy" },
-    { label: "Politique des Cookies", href: "/fr/cookies" },
+    { label: "Mentions Légales", href: "/fr/legal-notice" },
+    { label: "Politique de Confidentialité", href: "/fr/privacy-policy" },
+    { label: "Politique des Cookies", href: "/fr/cookies-policy" },
   ],
   th: [
-    { label: "ข้อกำหนดทางกฎหมาย", href: "/th/legal" },
-    { label: "นโยบายความเป็นส่วนตัว", href: "/th/privacy" },
-    { label: "นโยบายคุกกี้", href: "/th/cookies" },
+    { label: "ข้อกำหนดทางกฎหมาย", href: "/th/legal-notice" },
+    { label: "นโยบายความเป็นส่วนตัว", href: "/th/privacy-policy" },
+    { label: "นโยบายคุกกี้", href: "/th/cookies-policy" },
   ],
 };
 
@@ -34,9 +42,23 @@ function getLangSwitcherHref(targetLang: Locale): string {
   return `/${targetLang}`;
 }
 
+function handleManageCookies(e: React.MouseEvent<HTMLButtonElement>) {
+  e.preventDefault();
+  if (typeof window !== "undefined" && window.__openCookieSettings) {
+    window.__openCookieSettings();
+  }
+}
+
 export function Footer({ lang }: FooterProps) {
   const currentYear = new Date().getFullYear();
   const links = legalLinks[lang];
+
+  const manageCookiesLabel =
+    lang === "fr"
+      ? "Gérer les cookies"
+      : lang === "th"
+      ? "จัดการคุกกี้"
+      : "Manage cookies";
 
   return (
     <footer
@@ -56,11 +78,11 @@ export function Footer({ lang }: FooterProps) {
               <p>Bangkok 10110, Thailand</p>
               <p className="mt-2">
                 <a
-                  href="tel:+6621234567"
+                  href="tel:+6622584247"
                   className="hover:text-[var(--color-brand-secondary)] transition-colors"
-                  aria-label="Call us at +66 2 123 4567"
+                  aria-label="Call us at +66 2 258 4247"
                 >
-                  +66 2 123 4567
+                  +66 2 258 4247
                 </a>
               </p>
             </address>
@@ -129,6 +151,15 @@ export function Footer({ lang }: FooterProps) {
                   </Link>
                 </li>
               ))}
+              <li>
+                <button
+                  type="button"
+                  onClick={handleManageCookies}
+                  className="hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0 text-xs text-white/50"
+                >
+                  {manageCookiesLabel}
+                </button>
+              </li>
             </ul>
           </nav>
         </div>
