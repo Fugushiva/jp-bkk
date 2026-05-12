@@ -8,6 +8,7 @@ import { LenisProvider } from "@/components/layout/LenisProvider";
 import { SkipNav } from "@/components/layout/SkipNav";
 import { AxeProvider } from "@/components/layout/AxeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieBanner } from "@/components/ui/CookieBanner";
 import { organizationSchema, localBusinessSchema, websiteSchema } from "@/lib/schema";
 import "./globals.css";
 
@@ -61,6 +62,7 @@ export default function RootLayout({
         </LenisProvider>
         <AxeProvider />
         <Toaster />
+        <CookieBanner />
         <Analytics />
         <SpeedInsights />
       </body>
