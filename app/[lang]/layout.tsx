@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { cormorant, inter, sarabun } from "@/lib/fonts";
 import { locales, type Locale } from "@/lib/i18n";
 import "../globals.css";
@@ -32,6 +34,7 @@ export async function generateMetadata({
 
   return {
     title: titles[locale] ?? titles.en,
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://jp-bkk.com"),
   };
 }
 
@@ -47,7 +50,11 @@ export default async function LangLayout({ children, params }: LangLayoutProps) 
       lang={lang}
       className={`${cormorant.variable} ${inter.variable} ${sarabun.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <Analytics />
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
