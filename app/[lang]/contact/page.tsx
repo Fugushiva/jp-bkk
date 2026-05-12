@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { type Locale } from "@/lib/i18n";
 import { FadeUp } from "@/components/ui/FadeUp";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { breadcrumbSchema } from "@/lib/schema";
 
 interface ContactPageProps {
   params: Promise<{ lang: Locale }>;
@@ -24,7 +25,7 @@ export async function generateMetadata({
     th: "ค้นหา JP French Restaurant ที่ Sukhumvit Soi 31 กรุงเทพ เวลาเปิดทำการ โทรศัพท์ อีเมล และแบบฟอร์มสำหรับงานส่วนตัวและการจองกลุ่ม",
   };
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jp-bkk.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant";
 
   return {
     title: titles[lang] ?? titles.en,
@@ -36,6 +37,7 @@ export async function generateMetadata({
         en: "/contact",
         fr: "/fr/contact",
         th: "/th/contact",
+        "x-default": "/contact",
       },
     },
     openGraph: {
@@ -45,6 +47,20 @@ export async function generateMetadata({
       siteName: "JP French Restaurant Bangkok",
       locale: lang === "fr" ? "fr_FR" : lang === "th" ? "th_TH" : "en_US",
       type: "website",
+      images: [
+        {
+          url: "/og/contact.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Contact JP French Restaurant Bangkok",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titles[lang] ?? titles.en,
+      description: descriptions[lang] ?? descriptions.en,
+      images: ["/og/contact.jpg"],
     },
     robots: {
       index: false,
@@ -54,10 +70,22 @@ export async function generateMetadata({
 }
 
 export default async function ContactPage({ params }: ContactPageProps) {
-  await params;
+  const { lang } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant";
+  const homeUrl = lang === "en" ? siteUrl : `${siteUrl}/${lang}`;
+  const contactUrl = lang === "en" ? `${siteUrl}/contact` : `${siteUrl}/${lang}/contact`;
+
+  const breadcrumb = breadcrumbSchema([
+    { name: "Home", url: homeUrl },
+    { name: lang === "fr" ? "Nous Contacter" : lang === "th" ? "ติดต่อเรา" : "Contact", url: contactUrl },
+  ]);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
       {/* Hero */}
       <FadeUp>
         <div className="mb-12">

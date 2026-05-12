@@ -5,6 +5,7 @@ import { Timeline } from "@/components/sections/Timeline";
 import { PhilosophySection } from "@/components/sections/PhilosophySection";
 import { PressQuotes } from "@/components/sections/PressQuotes";
 import { CtaBanner } from "@/components/sections/CtaBanner";
+import { breadcrumbSchema, chefPersonSchema } from "@/lib/schema";
 
 interface OurStoryPageProps {
   params: Promise<{ lang: Locale }>;
@@ -27,7 +28,7 @@ export async function generateMetadata({
     th: "13 ปีของอาหารฝรั่งเศสในกรุงเทพ จากเมืองลียงสู่ Sukhumvit Soi 31 — เรื่องราวของเชฟ Jean-Pierre",
   };
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jp-bkk.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant";
 
   const canonicalPath =
     lang === "fr" ? "/fr/notre-histoire" : lang === "th" ? "/th/our-story" : "/our-story";
@@ -42,6 +43,7 @@ export async function generateMetadata({
         en: "/our-story",
         fr: "/fr/notre-histoire",
         th: "/th/our-story",
+        "x-default": "/our-story",
       },
     },
     openGraph: {
@@ -51,6 +53,20 @@ export async function generateMetadata({
       siteName: "JP French Restaurant Bangkok",
       locale: lang === "fr" ? "fr_FR" : lang === "th" ? "th_TH" : "en_US",
       type: "website",
+      images: [
+        {
+          url: "/og/our-story.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Chef Jean-Pierre — JP French Restaurant Bangkok",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titles[lang] ?? titles.en,
+      description: descriptions[lang] ?? descriptions.en,
+      images: ["/og/our-story.jpg"],
     },
     robots: {
       index: false,
@@ -61,9 +77,25 @@ export async function generateMetadata({
 
 export default async function OurStoryPage({ params }: OurStoryPageProps) {
   const { lang } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant";
+  const homeUrl = lang === "en" ? siteUrl : `${siteUrl}/${lang}`;
+  const pageUrl = `${siteUrl}${lang === "fr" ? "/fr/notre-histoire" : lang === "th" ? "/th/our-story" : "/our-story"}`;
+
+  const breadcrumb = breadcrumbSchema([
+    { name: "Home", url: homeUrl },
+    { name: lang === "fr" ? "Notre Histoire" : lang === "th" ? "เรื่องราวของเรา" : "Our Story", url: pageUrl },
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(chefPersonSchema) }}
+      />
       <HeroOurStory />
       <Timeline />
       <PhilosophySection />
