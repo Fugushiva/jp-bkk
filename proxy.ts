@@ -1,6 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { locales, defaultLocale, isValidLocale } from "@/lib/i18n";
 
+// ─── FR localized slug rewrites ──────────────────────────────────────────────
+// Maps French localized slugs to their canonical English-slug paths.
+// These are internal rewrites (not redirects) so the URL stays user-friendly.
+const FR_SLUG_REWRITES: Record<string, string> = {
+  "/fr/notre-histoire": "/fr/our-story",
+  // Legal slugs (M6 pages — pre-registered for when they're created)
+  "/fr/mentions-legales": "/fr/legal-notice",
+  "/fr/politique-confidentialite": "/fr/privacy-policy",
+  "/fr/politique-cookies": "/fr/cookies-policy",
+};
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -12,6 +23,13 @@ export function proxy(request: NextRequest) {
     pathname.includes(".")
   ) {
     return NextResponse.next();
+  }
+
+  // Handle FR localized slug rewrites (internal rewrite, URL stays the same)
+  if (FR_SLUG_REWRITES[pathname]) {
+    const url = request.nextUrl.clone();
+    url.pathname = FR_SLUG_REWRITES[pathname];
+    return NextResponse.rewrite(url);
   }
 
   // Check if the pathname already has a locale prefix

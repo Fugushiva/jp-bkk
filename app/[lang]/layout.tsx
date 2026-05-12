@@ -10,6 +10,7 @@ import { LenisProvider } from "@/components/layout/LenisProvider";
 import { SkipNav } from "@/components/layout/SkipNav";
 import { AxeProvider } from "@/components/layout/AxeProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { organizationSchema, localBusinessSchema, websiteSchema } from "@/lib/schema";
 import "../globals.css";
 
 interface LangLayoutProps {
@@ -40,7 +41,7 @@ export async function generateMetadata({
 
   return {
     title: titles[locale] ?? titles.en,
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://jp-bkk.com"),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant"),
     robots: {
       index: false,
       follow: false,
@@ -64,6 +65,22 @@ export default async function LangLayout({ children, params }: LangLayoutProps) 
     >
       <head>
         <meta name="robots" content="noindex, nofollow" />
+        {/* Google Fonts preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Global JSON-LD schemas */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <LenisProvider>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { type Locale } from "@/lib/i18n";
 import { FadeUp } from "@/components/ui/FadeUp";
+import { breadcrumbSchema, menuSchema } from "@/lib/schema";
 
 interface MenuPageProps {
   params: Promise<{ lang: Locale }>;
@@ -23,7 +24,7 @@ export async function generateMetadata({
     th: "อาหารฝรั่งเศสคลาสสิก ราคาเป็นบาท สตาร์เตอร์ จานหลัก ของหวาน และไวน์ ที่ JP French Restaurant ซอยสุขุมวิท 31 กรุงเทพ",
   };
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jp-bkk.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant";
 
   return {
     title: titles[lang] ?? titles.en,
@@ -35,6 +36,7 @@ export async function generateMetadata({
         en: "/menu",
         fr: "/fr/menu",
         th: "/th/menu",
+        "x-default": "/menu",
       },
     },
     openGraph: {
@@ -44,6 +46,20 @@ export async function generateMetadata({
       siteName: "JP French Restaurant Bangkok",
       locale: lang === "fr" ? "fr_FR" : lang === "th" ? "th_TH" : "en_US",
       type: "website",
+      images: [
+        {
+          url: "/og/menu.jpg",
+          width: 1200,
+          height: 630,
+          alt: "JP French Restaurant Menu — French Classics in Bangkok",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titles[lang] ?? titles.en,
+      description: descriptions[lang] ?? descriptions.en,
+      images: ["/og/menu.jpg"],
     },
     robots: {
       index: false,
@@ -197,10 +213,26 @@ function MenuSection({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function MenuPage({ params }: MenuPageProps) {
-  await params; // consume params (lang not needed for static content in M4)
+  const { lang } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant";
+  const homeUrl = lang === "en" ? siteUrl : `${siteUrl}/${lang}`;
+  const menuUrl = lang === "en" ? `${siteUrl}/menu` : `${siteUrl}/${lang}/menu`;
+
+  const breadcrumb = breadcrumbSchema([
+    { name: "Home", url: homeUrl },
+    { name: lang === "fr" ? "Notre Carte" : lang === "th" ? "เมนูของเรา" : "Our Menu", url: menuUrl },
+  ]);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(menuSchema) }}
+      />
       {/* Hero */}
       <FadeUp>
         <div className="mb-12 text-center">

@@ -6,6 +6,7 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { ChefTeaser } from "@/components/sections/ChefTeaser";
 import { LocationPreview } from "@/components/sections/LocationPreview";
 import { CtaBanner } from "@/components/sections/CtaBanner";
+import { breadcrumbSchema } from "@/lib/schema";
 
 interface LangPageProps {
   params: Promise<{ lang: Locale }>;
@@ -28,7 +29,7 @@ export async function generateMetadata({
     th: "เชฟ Jean-Pierre ต้อนรับคุณที่ Sukhumvit Soi 31 อาหารฝรั่งเศสคลาสสิก ราคาเป็นธรรม ไม่มีค่าบริการ เปิดตั้งแต่ปี 2012",
   };
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jp-bkk.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant";
 
   return {
     title: titles[lang] ?? titles.en,
@@ -40,6 +41,7 @@ export async function generateMetadata({
         en: "/",
         fr: "/fr",
         th: "/th",
+        "x-default": "/",
       },
     },
     openGraph: {
@@ -49,6 +51,20 @@ export async function generateMetadata({
       siteName: "JP French Restaurant Bangkok",
       locale: lang === "fr" ? "fr_FR" : lang === "th" ? "th_TH" : "en_US",
       type: "website",
+      images: [
+        {
+          url: "/og/home.jpg",
+          width: 1200,
+          height: 630,
+          alt: "JP French Restaurant Bangkok — Authentic French Bistro",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: titles[lang] ?? titles.en,
+      description: descriptions[lang] ?? descriptions.en,
+      images: ["/og/home.jpg"],
     },
     robots: {
       index: false,
@@ -59,9 +75,19 @@ export async function generateMetadata({
 
 export default async function LangHome({ params }: LangPageProps) {
   const { lang } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jpfrench.restaurant";
+  const homeUrl = lang === "en" ? siteUrl : `${siteUrl}/${lang}`;
+
+  const breadcrumb = breadcrumbSchema([
+    { name: "Home", url: homeUrl },
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
+      />
       <HeroHome lang={lang} />
       <SignatureDishes />
       <Testimonials />
