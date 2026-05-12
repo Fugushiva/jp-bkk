@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/Footer";
 import { LenisProvider } from "@/components/layout/LenisProvider";
 import { SkipNav } from "@/components/layout/SkipNav";
 import { AxeProvider } from "@/components/layout/AxeProvider";
+import { Toaster } from "@/components/ui/sonner";
 import "../globals.css";
 
 interface LangLayoutProps {
@@ -74,6 +75,7 @@ export default async function LangLayout({ children, params }: LangLayoutProps) 
           <Footer lang={locale} />
         </LenisProvider>
         <AxeProvider />
+        <Toaster />
         <Analytics />
         <SpeedInsights />
       </body>
